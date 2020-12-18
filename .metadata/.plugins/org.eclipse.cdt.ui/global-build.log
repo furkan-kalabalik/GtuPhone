@@ -1,0 +1,597 @@
+13:36:49 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:36:58 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:37:23 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:37:45 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:42:51 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:43:37 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:44:37 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:45:23 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8760	    120	   2712	  11592	   2d48	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+13:45:38 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:85:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8548	    120	   2712	  11380	   2c74	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+13:46:11 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8548	    120	   2712	  11380	   2c74	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:09:00 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, display_response, sizeof(display_response), 1000);
+                              ^~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:132:5: warning: statement with no effect [-Wunused-value]
+     3+3;
+     ^
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5808	     20	   3700	   9528	   2538	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:16:42 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5808	     20	   3700	   9528	   2538	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:18:42 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5808	     20	   3700	   9528	   2538	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:20:41 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 1000);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5808	     20	   3700	   9528	   2538	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:22:13 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 1000);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:132:9: warning: unused variable 'a' [-Wunused-variable]
+     int a = 4;
+         ^
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5820	     20	   3700	   9540	   2544	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:27:20 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 1000);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8632	    120	   3712	  12464	   30b0	Phone_Main.elf
+Finished building: default.size.stdout
+Finished building: Phone_Main.bin
+ 
+ 
+Finished building: Phone_Main.list
+ 
+14:27:50 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 1000);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8644	    120	   3712	  12476	   30bc	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:29:02 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8644	    120	   3712	  12476	   30bc	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:29:40 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 200);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8640	    120	   3712	  12472	   30b8	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:31:04 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 500);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8644	    120	   3712	  12476	   30bc	Phone_Main.elf
+Finished building: default.size.stdout
+Finished building: Phone_Main.bin
+ 
+ 
+Finished building: Phone_Main.list
+ 
+14:32:13 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8644	    120	   3712	  12476	   30bc	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:33:11 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 500);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8644	    120	   3712	  12476	   30bc	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:36:43 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'pSendSMS':
+../Core/Src/main.c:86:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+                             ^~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:87:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:129:30: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+    HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 500);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8652	    120	   3712	  12484	   30c4	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+14:37:53 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8652	    120	   3712	  12484	   30c4	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+14:41:47 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8652	    120	   3712	  12484	   30c4	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+16:26:30 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8652	    120	   3712	  12484	   30c4	Phone_Main.elf
+Finished building: default.size.stdout
+ 

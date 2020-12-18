@@ -59,16 +59,34 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char at_response[100];
+char at_response[1000];
+char display_response[1000];
 
 void pSendAtCommand(const char *command, uint32_t response_time)
 {
 	char command_buffer[30] = {0};
 	sprintf(command_buffer, "%s\r\n", command);
 	HAL_UART_Transmit(&huart1, (uint8_t*)&command_buffer[0], strlen(command_buffer), 100);
-	HAL_UART_Receive(&huart1, (uint8_t*)&at_response[0], 100, response_time);
+	HAL_UART_Receive(&huart1, (uint8_t*)&at_response[0], sizeof(at_response), response_time);
 }
 /* USER CODE END 0 */
+
+void pSendSMS(char *message_txt, char *phone_number)
+{
+	char ctrl_z = 26;
+	pSendAtCommand("AT+CMGF=1", 400);
+	memset(at_response, 0, sizeof(at_response));
+
+	pSendAtCommand("AT+CSCS=\"GSM\"", 400);
+	memset(at_response, 0, sizeof(at_response));
+
+	pSendAtCommand("AT+CMGS=\"+905383674319\"", 400);
+	memset(at_response, 0, sizeof(at_response));
+
+	HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
+	HAL_UART_Transmit(&huart1, &ctrl_z, 1, 100);
+	HAL_UART_Receive(&huart1, (uint8_t*)&at_response[0], sizeof(at_response), 120);
+}
 
 /**
   * @brief  The application entry point.
@@ -106,11 +124,29 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
     /* USER CODE END WHILE */
-  pSendAtCommand("ATE0", 400);
-  memset(at_response, 0, sizeof(at_response));
+  while(1)
+  {
+	  HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 500);
+	  if(display_response[1] == 1 && display_response[2] == 16)
+	  {
+		  char command[18];
+		  sprintf(&command[0], "ATD%si;", &display_response[8]);
+		    pSendAtCommand("ATE0", 400);
+		    memset(at_response, 0, sizeof(at_response));
 
-  pSendAtCommand("AT+COPS?", 300);
-  memset(at_response, 0, sizeof(at_response));
+		    pSendAtCommand(&command[0], 5000);
+		    memset(at_response, 0, sizeof(at_response));
+	  }
+	  memset(display_response, 0, sizeof(display_response));
+  }
+//  pSendAtCommand("ATE0", 400);
+//  memset(at_response, 0, sizeof(at_response));
+
+//  pSendAtCommand("ATD+905383674319i;", 5000);
+//  memset(at_response, 0, sizeof(at_response));
+
+//  pSendSMS("HelloWorld\x1a", "+905383674319");
+//  memset(at_response, 0, sizeof(at_response));
 
 	/* USER CODE BEGIN 3 */
   /* USER CODE END 3 */

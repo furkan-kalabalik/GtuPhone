@@ -54,8 +54,8 @@ all: main-build
 main-build: Phone_Main.elf secondary-outputs
 
 # Tool invocations
-Phone_Main.elf: $(OBJS) $(USER_OBJS) /Users/fk97/Desktop/Bitirme/STM/Phone_Main/STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/Users/fk97/Desktop/Bitirme/STM/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Phone_Main.elf: $(OBJS) $(USER_OBJS) /home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
