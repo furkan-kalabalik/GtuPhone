@@ -73,6 +73,8 @@ void pSendAtCommand(const char *command, uint32_t response_time)
 
 void pSendSMS(char *message_txt, char *phone_number)
 {
+	char receiver_command[100] = {0};
+	sprintf(&receiver_command[0], "AT+CMGS=\"%s\"", phone_number);
 	char ctrl_z = 26;
 	pSendAtCommand("AT+CMGF=1", 400);
 	memset(at_response, 0, sizeof(at_response));
@@ -80,7 +82,7 @@ void pSendSMS(char *message_txt, char *phone_number)
 	pSendAtCommand("AT+CSCS=\"GSM\"", 400);
 	memset(at_response, 0, sizeof(at_response));
 
-	pSendAtCommand("AT+CMGS=\"+905383674319\"", 400);
+	pSendAtCommand(&receiver_command[0], 400);
 	memset(at_response, 0, sizeof(at_response));
 
 	HAL_UART_Transmit(&huart1, message_txt, strlen(message_txt), 200);
@@ -119,7 +121,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  pSendAtCommand("ATE0", 400);
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -129,13 +131,18 @@ int main(void)
 	  HAL_UART_Receive(&huart2, &display_response[0], sizeof(display_response), 500);
 	  if(display_response[1] == 1 && display_response[2] == 16)
 	  {
-		  char command[18];
-		  sprintf(&command[0], "ATD%si;", &display_response[8]);
-		    pSendAtCommand("ATE0", 400);
-		    memset(at_response, 0, sizeof(at_response));
+		char command[18];
+		sprintf(&command[0], "ATD%si;", &display_response[8]);
+		memset(at_response, 0, sizeof(at_response));
 
-		    pSendAtCommand(&command[0], 5000);
-		    memset(at_response, 0, sizeof(at_response));
+		pSendAtCommand(&command[0], 5000);
+		memset(at_response, 0, sizeof(at_response));
+	  }
+	  else if(display_response[1] = 0x02 && display_response[2] == 0x39)
+	  {
+		  char *phone_number = strtok(&display_response[7], ">");
+		  char *text = strtok(NULL, ">");
+		  pSendSMS(text, phone_number);
 	  }
 	  memset(display_response, 0, sizeof(display_response));
   }
