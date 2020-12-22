@@ -1,10 +1,10 @@
-16:26:30 **** Incremental Build of configuration Debug for project Phone_Main ****
+09:58:20 **** Incremental Build of configuration Debug for project Phone_Main ****
 make -j12 all 
 arm-none-eabi-size   Phone_Main.elf 
    text	   data	    bss	    dec	    hex	filename
-   8652	    120	   3712	  12484	   30c4	Phone_Main.elf
+  18048	    124	  14780	  32952	   80b8	Phone_Main.elf
 Finished building: default.size.stdout
  
 
-16:26:31 Build Finished. 0 errors, 0 warnings. (took 465ms)
+09:58:20 Build Finished. 0 errors, 0 warnings. (took 464ms)
 

@@ -30,6 +30,7 @@
 #include "string.h"
 #include "call_process.h"
 #include "phone_state.h"
+#include "sms_process.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -91,7 +92,7 @@ int display_rx_index = 0;
 bool display_rec_flag = FALSE;
 te_call_state CALL_STATE = NO_CALL;
 te_phone_state PHONE_STATE = IDLE;
-
+te_sms_state SMS_STATE = NO_SMS;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -317,15 +318,21 @@ void parse_display_request(char *data)
 //		request.op = MAKE_CALL;
 //		memcpy(request.data, data, RX_SIZE);
 	}
-	else if(data[1] = 0x03 && data[2] == 0x02)
+	else if(data[1] == 0x03 && data[2] == 0x02)
 	{
 		CALL_STATE = TERMINATE_CALL;
 		while(CALL_STATE != NO_CALL);
 		vTaskDelete(call_task);
 	}
-	else if(data[1] == 0x01 && data[2] == 0x39)//Send sms
+	else if(data[1] == 0x02 && data[2] == 0x39)//Send sms
 	{
-
+		if(xTaskCreate(message_task_func, "message_task", 512, data, 3, &message_task) != pdPASS)
+		{
+		  __NOP();
+		}
+		while(SMS_STATE != COMPLETED_SMS);
+		vTaskDelete(message_task);
+		SMS_STATE = NO_SMS;
 	}
 }
 /* USER CODE END 4 */
@@ -365,6 +372,31 @@ void display_task_func(void *argument)
 
   }
   /* USER CODE END gsm_task_func */
+}
+
+void message_task_func(void *argument)
+{
+	char data[RX_SIZE] = {0};
+	char response[128] = {0};
+	char text_mod[] = "AT+CMGF=1\r\n";
+	char sender_command[64] = {0};
+	char message_command[160] = {0};
+	memcpy(&data[0], (char*)&argument[0], RX_SIZE);
+	memset(&argument[0], 0, RX_SIZE);
+	SMS_STATE = SEND_SMS;
+	char *number = strtok(&data[7], ">");
+	char *message = strtok(NULL, ">");
+	sprintf(&sender_command[0], "AT+CMGS=\"%s\"\r\n", number);
+	sprintf(&message_command[0], "%s", message);
+	message_command[strlen(message_command)-1] = 26;
+	HAL_UART_Transmit(GSM_UART, &text_mod, strlen(text_mod), 300);
+	HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+	HAL_UART_Transmit(GSM_UART, &sender_command, strlen(sender_command), 300);
+	HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+	HAL_UART_Transmit(GSM_UART, &message_command, strlen(sender_command), 300);
+	HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+	SMS_STATE = COMPLETED_SMS;
+	while(1);
 }
 
 void call_task_func(void *argument)
