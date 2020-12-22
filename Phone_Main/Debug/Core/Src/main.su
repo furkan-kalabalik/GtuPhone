@@ -5,9 +5,9 @@ main.c:234:13:MX_USART1_UART_Init	8	static
 main.c:267:13:MX_USART2_UART_Init	8	static
 main.c:300:13:MX_GPIO_Init	16	static
 main.c:310:6:parse_display_request	24	static,ignoring_inline_asm
-main.c:347:6:display_uart_task_func	272	static
-main.c:366:6:display_task_func	16	static
-main.c:377:6:message_task_func	648	static
-main.c:402:6:call_task_func	488	static
-main.c:464:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:481:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:349:6:display_uart_task_func	272	static
+main.c:368:6:display_task_func	16	static
+main.c:379:6:message_task_func	648	static
+main.c:405:6:call_task_func	568	static
+main.c:474:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:491:6:Error_Handler	4	static,ignoring_inline_asm

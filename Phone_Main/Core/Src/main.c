@@ -311,7 +311,9 @@ void parse_display_request(char *data)
 {
 	if(data[1] == 0x01 && data[2] == 0x10) //call
 	{
-		if(xTaskCreate(call_task_func, "call_task", 512, data, 3, &call_task) != pdPASS)
+		if(call_task != NULL)
+			vTaskDelete(call_task);
+		if(xTaskCreate(call_task_func, "call_task", 1024, data, 7, &call_task) != pdPASS)
 		{
 		  __NOP();
 		}
@@ -321,17 +323,17 @@ void parse_display_request(char *data)
 	else if(data[1] == 0x03 && data[2] == 0x02)
 	{
 		CALL_STATE = TERMINATE_CALL;
-		while(CALL_STATE != NO_CALL);
-		vTaskDelete(call_task);
+
 	}
 	else if(data[1] == 0x02 && data[2] == 0x39)//Send sms
 	{
-		if(xTaskCreate(message_task_func, "message_task", 512, data, 3, &message_task) != pdPASS)
+		if(message_task != NULL)
+			vTaskDelete(message_task);
+		if(xTaskCreate(message_task_func, "message_task", 1024, data, 7, &message_task) != pdPASS)
 		{
 		  __NOP();
 		}
 		while(SMS_STATE != COMPLETED_SMS);
-		vTaskDelete(message_task);
 		SMS_STATE = NO_SMS;
 	}
 }
@@ -396,6 +398,7 @@ void message_task_func(void *argument)
 	HAL_UART_Transmit(GSM_UART, &message_command, strlen(sender_command), 300);
 	HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
 	SMS_STATE = COMPLETED_SMS;
+	vTaskDelete(NULL);
 	while(1);
 }
 
@@ -408,6 +411,8 @@ void call_task_func(void *argument)
   char custom_command[64] = {0};
   char check_status[] = "AT+CPAS\r\n";
   char terminate_call[] = "ATH0\r\n";
+  char send_call_end[] = "call_progress.t1.txt=\"Call Ended!\"\xFF\xFF\xFF";
+  char start_page_timer[] = "call_progress.tm0.en=1\xFF\xFF\xFF";
   const TickType_t delay = 500 / portTICK_PERIOD_MS;
   memcpy(&data[0], (char*)&argument[0], RX_SIZE);
   memset(&argument[0], 0, RX_SIZE);
@@ -418,18 +423,23 @@ void call_task_func(void *argument)
 	  {
 	  case INITIATE_CALL:
 		  data[strlen(data)-1] = '\0';
-		  sprintf(&custom_command[0], "ATD%si;\r\n", &data[8]);
-		  HAL_UART_Transmit(GSM_UART, &custom_command, strlen(custom_command), 300);
+		  sprintf(&custom_command[0], "ATD+%si;\r\n", &data[8]);
+		  HAL_UART_Transmit(GSM_UART, &custom_command, strlen(custom_command), 500);
 		  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 5000);
 		  CALL_STATE = CHECK_CALL_STATE;
 		  break;
 	  case CHECK_CALL_STATE:
 		  HAL_UART_Transmit(GSM_UART, &check_status, strlen(check_status), 200);
 		  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+		  if(response[9] == '0')
+			  CALL_STATE = TERMINATE_CALL;
 		  break;
 	  case TERMINATE_CALL:
 		  HAL_UART_Transmit(GSM_UART, &terminate_call, strlen(terminate_call), 200);
 		  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+		  HAL_UART_Transmit(DISPLAY_UART, send_call_end, strlen(send_call_end), 300);
+		  HAL_UART_Transmit(DISPLAY_UART, start_page_timer, strlen(start_page_timer), 300);
+		  vTaskDelete(NULL);
 		  CALL_STATE = NO_CALL;
 		  break;
 	  default:
