@@ -180,6 +180,10 @@ int main(void)
   {
 	  __NOP();
   }
+  if(xTaskCreate(display_task_func, "display", 256, NULL, 3, &display_task) != pdPASS)
+  {
+	  __NOP();
+  }
   vTaskStartScheduler();
 
 }
@@ -309,7 +313,7 @@ void parse_display_request(char *data)
 	{
 		if(call_task != NULL)
 			vTaskDelete(call_task);
-		if(xTaskCreate(call_task_func, "call_task", 512, data, 7, &call_task) != pdPASS)
+		if(xTaskCreate(call_task_func, "call_task", 1024, data, 7, &call_task) != pdPASS)
 		{
 		  __NOP();
 		}
@@ -325,7 +329,7 @@ void parse_display_request(char *data)
 	{
 		if(message_task != NULL)
 			vTaskDelete(message_task);
-		if(xTaskCreate(message_task_func, "message_task", 512, data, 7, &message_task) != pdPASS)
+		if(xTaskCreate(message_task_func, "message_task", 1024, data, 7, &message_task) != pdPASS)
 		{
 		  __NOP();
 		}

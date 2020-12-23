@@ -1902,3 +1902,402 @@ arm-none-eabi-size   Phone_Main.elf
   18048	    124	  14780	  32952	   80b8	Phone_Main.elf
 Finished building: default.size.stdout
  
+08:33:59 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'display_uart_task_func':
+../Core/Src/main.c:353:36: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive_IT' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive_IT(DISPLAY_UART, &display_rx[display_rx_index], 1);
+                                    ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:703:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'message_task_func':
+../Core/Src/main.c:386:35: warning: dereferencing 'void *' pointer
+  memcpy(&data[0], (char*)&argument[0], RX_SIZE);
+                                   ^
+../Core/Src/main.c:387:18: warning: dereferencing 'void *' pointer
+  memset(&argument[0], 0, RX_SIZE);
+                  ^
+../Core/Src/main.c:394:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &text_mod, strlen(text_mod), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[12]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:395:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:396:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &sender_command, strlen(sender_command), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[64]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:397:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:398:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &message_command, strlen(sender_command), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[160]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:399:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'call_task_func':
+../Core/Src/main.c:417:36: warning: dereferencing 'void *' pointer
+   memcpy(&data[0], (char*)&argument[0], RX_SIZE);
+                                    ^
+../Core/Src/main.c:418:19: warning: dereferencing 'void *' pointer
+   memset(&argument[0], 0, RX_SIZE);
+                   ^
+../Core/Src/main.c:427:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &custom_command, strlen(custom_command), 500);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[64]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:428:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 5000);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:432:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &check_status, strlen(check_status), 200);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[10]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:433:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:438:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &terminate_call, strlen(terminate_call), 200);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[7]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:439:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:440:37: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+     HAL_UART_Transmit(DISPLAY_UART, send_call_end, strlen(send_call_end), 300);
+                                     ^~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:441:37: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+     HAL_UART_Transmit(DISPLAY_UART, start_page_timer, strlen(start_page_timer), 300);
+                                     ^~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18276	    124	  14780	  33180	   819c	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+08:34:20 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18276	    124	  14780	  33180	   819c	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+08:35:59 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18276	    124	  14780	  33180	   819c	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+08:38:22 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'display_uart_task_func':
+../Core/Src/main.c:349:36: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive_IT' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive_IT(DISPLAY_UART, &display_rx[display_rx_index], 1);
+                                    ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:703:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+                   ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'message_task_func':
+../Core/Src/main.c:382:35: warning: dereferencing 'void *' pointer
+  memcpy(&data[0], (char*)&argument[0], RX_SIZE);
+                                   ^
+../Core/Src/main.c:383:18: warning: dereferencing 'void *' pointer
+  memset(&argument[0], 0, RX_SIZE);
+                  ^
+../Core/Src/main.c:390:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &text_mod, strlen(text_mod), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[12]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:391:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:392:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &sender_command, strlen(sender_command), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[64]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:393:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:394:30: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(GSM_UART, &message_command, strlen(sender_command), 300);
+                              ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[160]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:395:29: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+  HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 300);
+                             ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'call_task_func':
+../Core/Src/main.c:413:36: warning: dereferencing 'void *' pointer
+   memcpy(&data[0], (char*)&argument[0], RX_SIZE);
+                                    ^
+../Core/Src/main.c:414:19: warning: dereferencing 'void *' pointer
+   memset(&argument[0], 0, RX_SIZE);
+                   ^
+../Core/Src/main.c:423:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &custom_command, strlen(custom_command), 500);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[64]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:424:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 5000);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:428:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &check_status, strlen(check_status), 200);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[10]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:429:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:434:33: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+     HAL_UART_Transmit(GSM_UART, &terminate_call, strlen(terminate_call), 200);
+                                 ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char (*)[7]'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:435:32: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive' differ in signedness [-Wpointer-sign]
+     HAL_UART_Receive(GSM_UART, &response[0], sizeof(response), 400);
+                                ^
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:701:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:436:37: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+     HAL_UART_Transmit(DISPLAY_UART, send_call_end, strlen(send_call_end), 300);
+                                     ^~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:437:37: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+     HAL_UART_Transmit(DISPLAY_UART, start_page_timer, strlen(start_page_timer), 300);
+                                     ^~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Phone_Main.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/furkankalabalik/Desktop/GtuPhone/Phone_Main/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Phone_Main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Phone_Main.elf
+ 
+arm-none-eabi-objdump -h -S  Phone_Main.elf  > "Phone_Main.list"
+arm-none-eabi-objcopy  -O binary  Phone_Main.elf  "Phone_Main.bin"
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18220	    124	  14780	  33124	   8164	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+Finished building: Phone_Main.bin
+ 
+Finished building: Phone_Main.list
+ 
+09:12:24 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18220	    124	  14780	  33124	   8164	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+09:13:05 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18220	    124	  14780	  33124	   8164	Phone_Main.elf
+Finished building: default.size.stdout
+ 
+12:20:36 **** Incremental Build of configuration Debug for project Phone_Main ****
+make -j12 all 
+arm-none-eabi-size   Phone_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  18220	    124	  14780	  33124	   8164	Phone_Main.elf
+Finished building: default.size.stdout
+ 
