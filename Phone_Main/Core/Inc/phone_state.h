@@ -10,8 +10,7 @@
 
 typedef enum
 {
-	INCALL,
-	CALLING,
+	BUSY,
 	IDLE,
 }te_phone_state;
 
