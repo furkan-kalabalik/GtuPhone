@@ -135,7 +135,7 @@ int main(void)
 	HAL_Init();
 
 	/* USER CODE BEGIN Init */
-
+	MX_GPIO_Init();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -151,7 +151,7 @@ int main(void)
 	MX_USART2_UART_Init();
 
 
-	char close_echo[] = "ATE0\r\n";
+	char close_echo[] = "AT+CRSL=100\n";
 	char response[64] = {0};
 	char get_entry[64] = {0};
 	char *p1;
@@ -165,7 +165,7 @@ int main(void)
 		sprintf(get_entry, "AT+CPBR=%d\r\n", i);
 		HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
 		HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
-		if(response[3] == 'C' && response[4] == 'M' && response[5] == 'E')
+		if(strcmp(response, "\r\nOK\r\n") == 0)
 			break;
 		p1 = strstr(response, "\"");
 		p1++;
@@ -202,11 +202,6 @@ int main(void)
 	}
 
 	if(xTaskCreate(call_task_func, "call_task", 512, NULL, 7, &call_task) != pdPASS)
-	{
-		__NOP();
-	}
-
-	if(xTaskCreate(listen_module_task_func, "listen_module", 512, NULL, 3, &listen_module_task) != pdPASS)
 	{
 		__NOP();
 	}
@@ -325,10 +320,22 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin : PB0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 }
 
@@ -373,13 +380,16 @@ void parse_display_request()
 	{
 		memcpy(call_task_data, display_rx, RX_SIZE);
 		PHONE_STATE = BUSY;
-		while(!release);
 		CALL_TYPE = MO;
 		CALL_STATE = INITIATE_CALL;
 	}
-	else if(display_rx[1] == 0x03 && display_rx[2] == 0x02) //Terminate call by user
+	else if((display_rx[1] == 0x03 && display_rx[2] == 0x02) || (display_rx[1] == 0x04 && display_rx[2] == 0x02)) //Terminate call by user
 	{
 		CALL_STATE = TERMINATE_CALL;
+	}
+	else if(display_rx[1] == 0x04 && display_rx[2] == 0x03) //Terminate call by user
+	{
+		CALL_STATE = ACCEPT_CALL;
 	}
 	else if((display_rx[1] == 0x06 && display_rx[2] == 0x05)) //Add subscriber to phone book
 	{
@@ -534,6 +544,33 @@ void call_task_func(void *argument)
 	}
 }
 
+void call_detected()
+{
+	char check_call[] = "AT+CLCC\r\n";
+	int index;
+	char *p1, *p2;
+
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)check_call, strlen(check_call), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
+	if(at_response[21] == '4' && PHONE_STATE == IDLE)
+	{
+		index = 0;
+		p1 = strstr(at_response, "\"");
+		p1++;
+		if(p1)
+			p2 = strstr(p1,"\"");
+		while(p1 != p2)
+		{
+			call_task_data[index++] = *p1;
+			p1++;
+		}
+		call_task_data[index] = '\n';
+		PHONE_STATE = BUSY;
+		CALL_TYPE = MT;
+		CALL_STATE = INITIATE_CALL;
+	}
+}
+
 void listen_module_task_func(void *arg)
 {
 	char check_call[] = "AT+CLCC\r\n";
@@ -550,6 +587,18 @@ void listen_module_task_func(void *arg)
 			{
 				index = 0;
 				p1 = strstr(at_response, "\"");
+				p1++;
+				if(p1)
+					p2 = strstr(p1,"\"");
+				while(p1 != p2)
+				{
+					call_task_data[index++] = *p1;
+					p1++;
+				}
+				call_task_data[index] = '\n';
+				index = 0;
+				p2++;
+				p1 = strstr(p2, "\"");
 				p1++;
 				if(p1)
 					p2 = strstr(p1,"\"");

@@ -32,4 +32,6 @@ typedef struct
 	char number[16];
 }ts_phonebook_entry;
 
+void call_detected();
+
 #endif /* INC_CALL_PROCESS_H_ */
