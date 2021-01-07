@@ -1,5 +1,5 @@
 main.c:105:6:HAL_UART_RxCpltCallback	16	static
-main.c:126:5:main	184	static,ignoring_inline_asm
+main.c:126:5:main	360	static,ignoring_inline_asm
 main.c:216:6:SystemClock_Config	72	static
 main.c:255:13:MX_USART1_UART_Init	8	static
 main.c:288:13:MX_USART2_UART_Init	8	static
@@ -10,7 +10,8 @@ main.c:377:6:parse_display_request	8	static
 main.c:411:6:display_uart_task_func	16	static
 main.c:424:6:message_task_func	264	static
 main.c:460:6:call_task_func	360	static
-main.c:547:6:call_detected	32	static
-main.c:574:6:listen_module_task_func	40	static
-main.c:633:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:650:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:547:13:call_detected	32	static
+main.c:574:13:sms_detected	4	static
+main.c:579:6:ring_int_handler	24	static
+main.c:653:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:670:6:Error_Handler	4	static,ignoring_inline_asm

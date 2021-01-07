@@ -151,8 +151,8 @@ int main(void)
 	MX_USART2_UART_Init();
 
 
-	char close_echo[] = "AT+CRSL=100\n";
-	char response[64] = {0};
+	char close_echo[] = "ATE0\n";
+	char response[256] = {0};
 	char get_entry[64] = {0};
 	char *p1;
 	char *p2;
@@ -544,15 +544,15 @@ void call_task_func(void *argument)
 	}
 }
 
-void call_detected()
+static void call_detected()
 {
 	char check_call[] = "AT+CLCC\r\n";
 	int index;
 	char *p1, *p2;
-
+	memset(at_response, 0, sizeof(at_response));
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)check_call, strlen(check_call), 200);
-	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
-	if(at_response[21] == '4' && PHONE_STATE == IDLE)
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 300);
+	if(at_response[13] == '4' && PHONE_STATE == IDLE)
 	{
 		index = 0;
 		p1 = strstr(at_response, "\"");
@@ -571,56 +571,76 @@ void call_detected()
 	}
 }
 
-void listen_module_task_func(void *arg)
+static void sms_detected()
 {
-	char check_call[] = "AT+CLCC\r\n";
-	int index;
-	char *p1, *p2;
-	while(1)
+
+}
+
+void ring_int_handler()
+{
+	char phone_state[] = "AT+CPAS\r\n";
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)phone_state, strlen(phone_state), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
+	if(strstr(at_response, "RING") != NULL)
 	{
-		if(PHONE_STATE == IDLE)
-		{
-			release = 0;
-			HAL_UART_Transmit(GSM_UART, (uint8_t*)check_call, strlen(check_call), 200);
-			HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
-			if(at_response[13] == '3')
-			{
-				index = 0;
-				p1 = strstr(at_response, "\"");
-				p1++;
-				if(p1)
-					p2 = strstr(p1,"\"");
-				while(p1 != p2)
-				{
-					call_task_data[index++] = *p1;
-					p1++;
-				}
-				call_task_data[index] = '\n';
-				index = 0;
-				p2++;
-				p1 = strstr(p2, "\"");
-				p1++;
-				if(p1)
-					p2 = strstr(p1,"\"");
-				while(p1 != p2)
-				{
-					call_task_data[index++] = *p1;
-					p1++;
-				}
-				call_task_data[index] = '\n';
-				PHONE_STATE = BUSY;
-				CALL_TYPE = MT;
-				CALL_STATE = INITIATE_CALL;
-			}
-		}
-		else
-		{
-			release = 1;
-		}
-		memset(at_response, 0, RX_SIZE);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
+		call_detected();
+	}
+	else if(at_response[9] == '0')
+	{
+		sms_detected();
 	}
 }
+
+//void listen_module_task_func(void *arg)
+//{
+//	char check_call[] = "AT+CLCC\r\n";
+//	int index;
+//	char *p1, *p2;
+//	while(1)
+//	{
+//		if(PHONE_STATE == IDLE)
+//		{
+//			release = 0;
+//			HAL_UART_Transmit(GSM_UART, (uint8_t*)check_call, strlen(check_call), 200);
+//			HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
+//			if(at_response[13] == '3')
+//			{
+//				index = 0;
+//				p1 = strstr(at_response, "\"");
+//				p1++;
+//				if(p1)
+//					p2 = strstr(p1,"\"");
+//				while(p1 != p2)
+//				{
+//					call_task_data[index++] = *p1;
+//					p1++;
+//				}
+//				call_task_data[index] = '\n';
+//				index = 0;
+//				p2++;
+//				p1 = strstr(p2, "\"");
+//				p1++;
+//				if(p1)
+//					p2 = strstr(p1,"\"");
+//				while(p1 != p2)
+//				{
+//					call_task_data[index++] = *p1;
+//					p1++;
+//				}
+//				call_task_data[index] = '\n';
+//				PHONE_STATE = BUSY;
+//				CALL_TYPE = MT;
+//				CALL_STATE = INITIATE_CALL;
+//			}
+//		}
+//		else
+//		{
+//			release = 1;
+//		}
+//		memset(at_response, 0, RX_SIZE);
+//		vTaskDelay(500 / portTICK_PERIOD_MS);
+//	}
+//}
 
  /**
   * @brief  Period elapsed callback in non blocking mode
