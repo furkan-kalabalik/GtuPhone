@@ -101,7 +101,9 @@ te_call_type CALL_TYPE;
 te_phone_state PHONE_STATE = IDLE;
 te_sms_state SMS_STATE = NO_SMS;
 ts_phonebook_entry phonebook[25];
+ts_rec_message messages[50];
 int phonebook_index = 0;
+int message_index = 0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(display_rx[display_rx_index] == '\n')
@@ -151,7 +153,9 @@ int main(void)
 	MX_USART2_UART_Init();
 
 
-	char close_echo[] = "ATE0\n";
+	char close_echo[] = "ATE0\r\n";
+	char text_mode[] = "AT+CMGF=1\r\n";
+	char message_buf[176] = {0};
 	char response[256] = {0};
 	char get_entry[64] = {0};
 	char *p1;
@@ -159,6 +163,9 @@ int main(void)
 	int index = 0;
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)&close_echo[0], strlen(close_echo), 200);
 	HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)&text_mode[0], strlen(text_mode), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
+
 	memset(response, 0, sizeof(response));
 	for(int i = 1; i < 251; i++)
 	{
@@ -191,7 +198,38 @@ int main(void)
 		index = 0;
 		phonebook_index++;
 	}
-
+	index = 0;
+	for(int i = 1; i < 251; i++)
+	{
+		sprintf(get_entry, "AT+CMGR=%d\r\n", i);
+		HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
+		HAL_UART_Receive(GSM_UART, (uint8_t*)&message_buf[0], sizeof(message_buf), 1000);
+		if(strcmp(message_buf, "\r\nOK\r\n") == 0)
+			break;
+		p1 = strstr(message_buf, "\"+");
+		p1++;
+		if(p1)
+		  p2 = strstr(p1,"\"");
+		while(p1 != p2)
+		{
+		  messages[i-1].sender[index++] = *p1;
+		  p1++;
+		}
+		p2++;
+		p1 = strstr(p2, "\n");
+		p1++;
+		if(p1)
+		  p2 = strstr(p1,"\r");
+		index = 0;
+		while(p1 != p2)
+		{
+		  messages[i-1].message[index++] = *p1;
+		  p1++;
+		}
+		memset(message_buf, 0, sizeof(message_buf));
+		index = 0;
+		message_index++;
+	}
 	if(xTaskCreate(display_uart_task_func, "display_uart", 256, NULL, 3, &display_uart_task) != pdPASS)
 	{
 		__NOP();
@@ -201,10 +239,14 @@ int main(void)
 		__NOP();
 	}
 
-	if(xTaskCreate(call_task_func, "call_task", 512, NULL, 7, &call_task) != pdPASS)
+	if(xTaskCreate(call_task_func, "call_task", 256, NULL, 7, &call_task) != pdPASS)
 	{
 		__NOP();
 	}
+	char ready[]="main_page.t0.txt=\"Phone is ready!\"\xFF\xFF\xFF";
+	char start_time[]="main_page.tm0.en=1\xFF\xFF\xFF";
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)ready, strlen(ready), 200);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)start_time, strlen(start_time), 200);
 	vTaskStartScheduler();
 
 }
@@ -374,6 +416,23 @@ void add_subscriber(char *data)
 	phonebook_index++;
 }
 
+void show_text_message_index(int index)
+{
+	index = (-1)*(index - (message_index-1));
+	char sender[64] = {0};
+	char message[128];
+	char visible_buton_1[] = "vis b1,1\xFF\xFF\xFF";
+	char visible_buton_0[] = "vis b0,1\xFF\xFF\xFF";
+	char visible_buton_3[] = "vis b3,1\xFF\xFF\xFF";
+	sprintf(sender, "messages.t0.txt=\"%s\"\xFF\xFF\xFF", messages[index].sender);
+	sprintf(message, "messages.t1.txt=\"%s\"\xFF\xFF\xFF", messages[index].message);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)sender, strlen(sender), 200);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)message, strlen(message), 400);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)visible_buton_1, strlen(visible_buton_1), 100);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)visible_buton_0, strlen(visible_buton_0), 100);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)visible_buton_3, strlen(visible_buton_3), 100);
+}
+
 void parse_display_request()
 {
 	if((display_rx[1] == 0x01 && display_rx[2] == 0x10) || (display_rx[1] == 0x05 && display_rx[2] == 0x05)) //call
@@ -400,10 +459,15 @@ void parse_display_request()
 	{
 		show_subscriber_with_index(display_rx[7]);
 	}
-	else if(display_rx[1] == 0x02 && display_rx[2] == 0x39)//Send sms
+	else if(display_rx[1] == 0x02 && display_rx[2] == 0x37)//Send sms
 	{
 		memcpy(sms_task_data, display_rx, RX_SIZE);
 		SMS_STATE = SEND_SMS;
+	}
+	else if((display_rx[1] == 0x09 && display_rx[2] == 0x02) || (display_rx[1] == 0x09 && display_rx[2] == 0x03) //Get message
+			|| (display_rx[1] == 0x08 && display_rx[2] == 0x03) || (display_rx[1] == 0x00 && display_rx[2] == 0x06))
+	{
+		show_text_message_index(display_rx[7]);
 	}
 	memset(display_rx, 0, RX_SIZE);
 }
@@ -573,7 +637,38 @@ static void call_detected()
 
 static void sms_detected()
 {
-
+	char message_buf[96] = {0};
+	char get_entry[20] ={0};
+	char new_mess[]="main_page.t1.txt=\"New message! Tap to read!\"\xFF\xFF\xFF";
+	char *p1, *p2;
+	int index = 0;
+	sprintf(get_entry, "AT+CMGR=%d\r\n", message_index+1);
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&message_buf[0], sizeof(message_buf), 1000);
+	if(strcmp(message_buf, "\r\nOK\r\n") == 0)
+		return;
+	p1 = strstr(message_buf, "\"+");
+	p1++;
+	if(p1)
+	  p2 = strstr(p1,"\"");
+	while(p1 != p2)
+	{
+	  messages[message_index].sender[index++] = *p1;
+	  p1++;
+	}
+	p2++;
+	p1 = strstr(p2, "\n");
+	p1++;
+	if(p1)
+	  p2 = strstr(p1,"\r");
+	index = 0;
+	while(p1 != p2)
+	{
+	  messages[message_index].message[index++] = *p1;
+	  p1++;
+	}
+	message_index++;
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)new_mess, strlen(new_mess), 300);
 }
 
 void ring_int_handler()
