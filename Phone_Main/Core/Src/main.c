@@ -433,6 +433,41 @@ void show_text_message_index(int index)
 	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)visible_buton_3, strlen(visible_buton_3), 100);
 }
 
+void send_date_and_time()
+{
+	char date_command[] = "AT+CCLK?\r\n";
+	char response[64] = {0};
+	char command[32] = {0};
+	char *p1, *p2;
+	int index = 0;
+	int hour,minute,second,day,month,year;
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)date_command, strlen(date_command), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
+	p1 = strstr(at_response, "\"");
+	p1++;
+	if(p1)
+	  p2 = strstr(p1,"\"");
+	while(p1 != p2)
+	{
+	  response[index++] = *p1;
+	  p1++;
+	}
+	sscanf(response,"%d/%d/%d,%d:%d:%d", &year, &month, &day, &hour, &minute, &second);
+	year += 2000;
+	sprintf(command, "main_page.n5.val=%d\xFF\xFF\xFF", second);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+	sprintf(command, "main_page.n1.val=%d\xFF\xFF\xFF", minute);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+	sprintf(command, "main_page.n0.val=%d\xFF\xFF\xFF", hour);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+	sprintf(command, "main_page.n2.val=%d\xFF\xFF\xFF", day);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+	sprintf(command, "main_page.n3.val=%d\xFF\xFF\xFF", month);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+	sprintf(command, "main_page.n4.val=%d\xFF\xFF\xFF", year);
+	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)command, strlen(command), 200);
+}
+
 void parse_display_request()
 {
 	if((display_rx[1] == 0x01 && display_rx[2] == 0x10) || (display_rx[1] == 0x05 && display_rx[2] == 0x05)) //call
@@ -468,6 +503,10 @@ void parse_display_request()
 			|| (display_rx[1] == 0x08 && display_rx[2] == 0x03) || (display_rx[1] == 0x00 && display_rx[2] == 0x06))
 	{
 		show_text_message_index(display_rx[7]);
+	}
+	else if(display_rx[1] == 0x00 && display_rx[2] == 0x12)//Send time
+	{
+		send_date_and_time();
 	}
 	memset(display_rx, 0, RX_SIZE);
 }
