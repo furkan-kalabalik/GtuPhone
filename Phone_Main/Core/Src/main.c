@@ -57,7 +57,7 @@ UART_HandleTypeDef huart2;
 xTaskHandle display_uart_task;
 xTaskHandle call_task;
 xTaskHandle sms_task;
-xTaskHandle listen_module_task;
+xTaskHandle interrupt_task;
 
 //SemaphoreHandle_t listen_mutex = NULL;
 
@@ -68,7 +68,7 @@ typedef uint8_t			bool;
 #define TRUE			1
 #define FALSE			0
 #define RX_SIZE			256
-
+int interruptHandle = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,8 +80,10 @@ static void MX_USART2_UART_Init(void);
 void display_uart_task_func(void *arg);
 void call_task_func(void *arg);
 void message_task_func(void *arg);
-void listen_module_task_func(void *arg);
+void interrupt_task_func(void *arg);
 void parse_display_request();
+void call_detected();
+void sms_detected();
 int release = 0;
 /* USER CODE BEGIN PFP */
 
@@ -100,10 +102,11 @@ te_call_state CALL_STATE = NO_CALL;
 te_call_type CALL_TYPE;
 te_phone_state PHONE_STATE = IDLE;
 te_sms_state SMS_STATE = NO_SMS;
-ts_phonebook_entry phonebook[25];
-ts_rec_message messages[50];
+ts_phonebook_entry phonebook[20];
+ts_rec_message messages[20];
 int phonebook_index = 0;
-int message_index = 0;
+int sim_message_index = 0;
+int running_message_index = 0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(display_rx[display_rx_index] == '\n')
@@ -154,6 +157,7 @@ int main(void)
 
 
 	char close_echo[] = "ATE0\r\n";
+	char ringtone[] = "AT+CALS=10\r\n";
 	char text_mode[] = "AT+CMGF=1\r\n";
 	char message_buf[176] = {0};
 	char response[256] = {0};
@@ -161,13 +165,16 @@ int main(void)
 	char *p1;
 	char *p2;
 	int index = 0;
+	int done = 0;
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)&close_echo[0], strlen(close_echo), 200);
+	HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)&ringtone[0], strlen(ringtone), 200);
 	HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)&text_mode[0], strlen(text_mode), 200);
 	HAL_UART_Receive(GSM_UART, (uint8_t*)&response[0], sizeof(response), 400);
 
 	memset(response, 0, sizeof(response));
-	for(int i = 1; i < 251; i++)
+	for(int i = 1; i < 20; i++)
 	{
 		sprintf(get_entry, "AT+CPBR=%d\r\n", i);
 		HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
@@ -201,18 +208,21 @@ int main(void)
 	index = 0;
 	for(int i = 1; i < 251; i++)
 	{
-		sprintf(get_entry, "AT+CMGR=%d\r\n", i);
+		sprintf(get_entry, "AT+CMGR=%d\r\n", sim_message_index+1);
 		HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
 		HAL_UART_Receive(GSM_UART, (uint8_t*)&message_buf[0], sizeof(message_buf), 1000);
 		if(strcmp(message_buf, "\r\nOK\r\n") == 0)
+		{
 			break;
+		}
+		memset(&messages[running_message_index], 0, sizeof(ts_rec_message));
 		p1 = strstr(message_buf, "\"+");
 		p1++;
 		if(p1)
 		  p2 = strstr(p1,"\"");
 		while(p1 != p2)
 		{
-		  messages[i-1].sender[index++] = *p1;
+		  messages[running_message_index].sender[index++] = *p1;
 		  p1++;
 		}
 		p2++;
@@ -223,14 +233,19 @@ int main(void)
 		index = 0;
 		while(p1 != p2)
 		{
-		  messages[i-1].message[index++] = *p1;
+		  messages[running_message_index].message[index++] = *p1;
 		  p1++;
 		}
 		memset(message_buf, 0, sizeof(message_buf));
 		index = 0;
-		message_index++;
+		sim_message_index++;
+		running_message_index++;
+		if(running_message_index == 20)
+		{
+			running_message_index = 0;
+		}
 	}
-	if(xTaskCreate(display_uart_task_func, "display_uart", 256, NULL, 3, &display_uart_task) != pdPASS)
+	if(xTaskCreate(display_uart_task_func, "display_uart", 384, NULL, 3, &display_uart_task) != pdPASS)
 	{
 		__NOP();
 	}
@@ -240,6 +255,11 @@ int main(void)
 	}
 
 	if(xTaskCreate(call_task_func, "call_task", 256, NULL, 7, &call_task) != pdPASS)
+	{
+		__NOP();
+	}
+
+	if(xTaskCreate(interrupt_task_func, "interrupt_task", 256, NULL, 7, &interrupt_task) != pdPASS)
 	{
 		__NOP();
 	}
@@ -376,7 +396,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 }
@@ -409,16 +429,18 @@ void add_subscriber(char *data)
 	char *number = strtok(NULL, ">");
 	number[strlen(number)-1] = '\0';
 	char sim_write_command[64] = {0};
-	sprintf(sim_write_command, "AT+CPBW=,\"%s\",145,\"%s\"", number, name);
+	sprintf(sim_write_command, "AT+CPBW=,\"%s\",145,\"%s\"\r\n", number, name);
 	strcpy(phonebook[phonebook_index].name, name);
 	strcpy(phonebook[phonebook_index].number, number);
-	HAL_UART_Transmit(GSM_UART, (uint8_t*)sim_write_command, strlen(sim_write_command), 300);
+	HAL_UART_Transmit(GSM_UART, (uint8_t*)sim_write_command, strlen(sim_write_command), 400);
 	phonebook_index++;
 }
 
 void show_text_message_index(int index)
 {
-	index = (-1)*(index - (message_index-1));
+	index = running_message_index-1-index;
+	if(index < 0)
+		index += 20;
 	char sender[64] = {0};
 	char message[128];
 	char visible_buton_1[] = "vis b1,1\xFF\xFF\xFF";
@@ -485,7 +507,7 @@ void parse_display_request()
 	{
 		CALL_STATE = ACCEPT_CALL;
 	}
-	else if((display_rx[1] == 0x06 && display_rx[2] == 0x05)) //Add subscriber to phone book
+	else if((display_rx[1] == 0x06 && display_rx[2] == 0x03)) //Add subscriber to phone book
 	{
 		add_subscriber(&display_rx[7]);
 	}
@@ -511,6 +533,31 @@ void parse_display_request()
 	memset(display_rx, 0, RX_SIZE);
 }
 
+void interrupt_task_func(void *arg)
+{
+	char phone_state[] = "AT+CPAS\r\n";
+	while(1)
+	{
+		if(interruptHandle)
+		{
+			interruptHandle = 0;
+			HAL_UART_Transmit(GSM_UART, (uint8_t*)phone_state, strlen(phone_state), 200);
+			HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
+			if(at_response[10] == '3')
+			{
+				call_detected();
+			}
+			else if(at_response[10] == '0')
+			{
+				sms_detected();
+			}
+			HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+		}
+		else
+			vTaskDelay(500 / portTICK_PERIOD_MS);
+	}
+}
+
 void display_uart_task_func(void *argument)
 {
 	HAL_UART_Receive_IT(DISPLAY_UART, (uint8_t*)&display_rx[display_rx_index], 1);
@@ -521,6 +568,8 @@ void display_uart_task_func(void *argument)
 			display_rec_flag = FALSE;
 			parse_display_request();
 		}
+		else
+			vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -541,20 +590,22 @@ void message_task_func(void *argument)
 				sprintf(&sender_command[0], "AT+CMGS=\"%s\"\r\n", number);
 				sprintf(&message_command[0], "%s", message);
 				message_command[strlen(message_command)-1] = 26;
-				HAL_UART_Transmit(GSM_UART, (uint8_t*)text_mod, strlen(text_mod), 300);
-				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 300);
-				HAL_UART_Transmit(GSM_UART, (uint8_t*)sender_command, strlen(sender_command), 300);
-				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 300);
-				HAL_UART_Transmit(GSM_UART, (uint8_t*)message_command, strlen(sender_command), 300);
-				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 300);
+				HAL_UART_Transmit(GSM_UART, (uint8_t*)text_mod, strlen(text_mod), 400);
+				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
+				HAL_UART_Transmit(GSM_UART, (uint8_t*)sender_command, strlen(sender_command), 400);
+				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
+				HAL_UART_Transmit(GSM_UART, (uint8_t*)message_command, strlen(sender_command), 400);
+				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
 				SMS_STATE = COMPLETED_SMS;
 			break;
 			case COMPLETED_SMS:
 				memset(sms_task_data, 0, RX_SIZE);
 				SMS_STATE = NO_SMS;
 			break;
-			default:
+			case NO_SMS:
 				vTaskDelay(500 / portTICK_PERIOD_MS);
+			break;
+			default:
 			break;
 		}
 	}
@@ -585,7 +636,7 @@ void call_task_func(void *argument)
 					sprintf(&custom_command[0], "ATD+%si;\r\n", &call_task_data[8]);
 					HAL_UART_Transmit(GSM_UART, (uint8_t*)&custom_command[0], strlen(custom_command), 500);
 					HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 5000);
-					if(strcmp(at_response,"\r\nOK\r\n") == 0)
+					if(strstr(at_response,"OK") != NULL && (at_response[2] == 'O' || at_response[3] == 'O'))
 						CALL_STATE = DIALING;
 					else
 						CALL_STATE = TERMINATE_CALL;
@@ -602,12 +653,12 @@ void call_task_func(void *argument)
 				memset(at_response, 0, RX_SIZE);
 				HAL_UART_Transmit(GSM_UART, (uint8_t*)check_status, strlen(check_status), 200);
 				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
-				if(at_response[13] == '0')
+				if(strstr(at_response,"1,0,0") != NULL)
 				{
 					CALL_STATE = CHECK_CALL_STATE;
 					HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)send_call_start, strlen(send_call_start), 300);
 				}
-				else if(strcmp(at_response,"\r\nOK\r\n") == 0)
+				else if(strstr(at_response,"OK") != NULL && (at_response[2] == 'O' || at_response[3] == 'O'))
 					CALL_STATE = TERMINATE_CALL;
 			break;
 			case ACCEPT_CALL:
@@ -619,8 +670,12 @@ void call_task_func(void *argument)
 				memset(at_response, 0, RX_SIZE);
 				HAL_UART_Transmit(GSM_UART, (uint8_t*)check_status, strlen(check_status), 200);
 				HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 400);
-				if(strcmp(at_response,"\r\nOK\r\n") == 0)
+				if(CALL_TYPE == MT && ((strstr(at_response,"1,1") == NULL) || (strstr(at_response,"1,1") == NULL)))
 					CALL_STATE = TERMINATE_CALL;
+				else if(CALL_TYPE == MO && strstr(at_response,"1,0,0") == NULL)
+					CALL_STATE = TERMINATE_CALL;
+
+				vTaskDelay(500 / portTICK_PERIOD_MS);
 			break;
 			case TERMINATE_CALL:
 				memset(at_response, 0, RX_SIZE);
@@ -640,14 +695,17 @@ void call_task_func(void *argument)
 				PHONE_STATE = IDLE;
 				CALL_STATE = NO_CALL;
 			break;
+			case NO_CALL:
+				vTaskDelay(500 / portTICK_PERIOD_MS);
+			break;
 			default:
 			break;
 		}
-		vTaskDelay(500 / portTICK_PERIOD_MS);
+
 	}
 }
 
-static void call_detected()
+void call_detected()
 {
 	char check_call[] = "AT+CLCC\r\n";
 	int index;
@@ -655,7 +713,7 @@ static void call_detected()
 	memset(at_response, 0, sizeof(at_response));
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)check_call, strlen(check_call), 200);
 	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 300);
-	if(at_response[13] == '4' && PHONE_STATE == IDLE)
+	if(strstr(at_response, "1,1,4") && PHONE_STATE == IDLE)
 	{
 		index = 0;
 		p1 = strstr(at_response, "\"");
@@ -674,14 +732,14 @@ static void call_detected()
 	}
 }
 
-static void sms_detected()
+void sms_detected()
 {
 	char message_buf[96] = {0};
 	char get_entry[20] ={0};
 	char new_mess[]="main_page.t1.txt=\"New message! Tap to read!\"\xFF\xFF\xFF";
 	char *p1, *p2;
 	int index = 0;
-	sprintf(get_entry, "AT+CMGR=%d\r\n", message_index+1);
+	sprintf(get_entry, "AT+CMGR=%d\r\n", sim_message_index+1);
 	HAL_UART_Transmit(GSM_UART, (uint8_t*)&get_entry[0], strlen(get_entry), 200);
 	HAL_UART_Receive(GSM_UART, (uint8_t*)&message_buf[0], sizeof(message_buf), 1000);
 	if(strcmp(message_buf, "\r\nOK\r\n") == 0)
@@ -692,7 +750,7 @@ static void sms_detected()
 	  p2 = strstr(p1,"\"");
 	while(p1 != p2)
 	{
-	  messages[message_index].sender[index++] = *p1;
+	  messages[running_message_index].sender[index++] = *p1;
 	  p1++;
 	}
 	p2++;
@@ -703,26 +761,14 @@ static void sms_detected()
 	index = 0;
 	while(p1 != p2)
 	{
-	  messages[message_index].message[index++] = *p1;
+	  messages[running_message_index].message[index++] = *p1;
 	  p1++;
 	}
-	message_index++;
+	running_message_index++;
+	sim_message_index++;
+	if(running_message_index == 20)
+		running_message_index = 0;
 	HAL_UART_Transmit(DISPLAY_UART, (uint8_t*)new_mess, strlen(new_mess), 300);
-}
-
-void ring_int_handler()
-{
-	char phone_state[] = "AT+CPAS\r\n";
-	HAL_UART_Transmit(GSM_UART, (uint8_t*)phone_state, strlen(phone_state), 200);
-	HAL_UART_Receive(GSM_UART, (uint8_t*)&at_response[0], sizeof(at_response), 500);
-	if(strstr(at_response, "RING") != NULL)
-	{
-		call_detected();
-	}
-	else if(at_response[9] == '0')
-	{
-		sms_detected();
-	}
 }
 
 //void listen_module_task_func(void *arg)

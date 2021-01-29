@@ -32,6 +32,5 @@ typedef struct
 	char number[16];
 }ts_phonebook_entry;
 
-void ring_int_handler();
 
 #endif /* INC_CALL_PROCESS_H_ */

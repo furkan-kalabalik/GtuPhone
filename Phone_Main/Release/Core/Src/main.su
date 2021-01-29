@@ -1,0 +1,17 @@
+main.c:383:13:MX_GPIO_Init	40	static
+main.c:614:6:call_task_func	352	static
+main.c:576:6:message_task_func	264	static
+main.c:110:6:HAL_UART_RxCpltCallback	0	static
+main.c:278:6:SystemClock_Config	72	static,ignoring_inline_asm
+main.c:131:5:main	656	static,ignoring_inline_asm
+main.c:404:6:show_subscriber_with_index	168	static
+main.c:426:6:add_subscriber	88	static
+main.c:439:6:show_text_message_index	248	static
+main.c:458:6:send_date_and_time	168	static
+main.c:493:6:parse_display_request	8	static
+main.c:561:6:display_uart_task_func	8	static
+main.c:708:6:call_detected	32	static
+main.c:735:6:sms_detected	208	static
+main.c:536:6:interrupt_task_func	24	static
+main.c:833:6:HAL_TIM_PeriodElapsedCallback	0	static
+main.c:850:6:Error_Handler	0	static,ignoring_inline_asm

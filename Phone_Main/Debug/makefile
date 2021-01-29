@@ -47,6 +47,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 Phone_Main.list \
 
+OBJCOPY_HEX += \
+Phone_Main.hex \
+
 OBJCOPY_BIN += \
 Phone_Main.bin \
 
@@ -73,6 +76,11 @@ Phone_Main.list: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Phone_Main.hex: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "Phone_Main.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 Phone_Main.bin: $(EXECUTABLES)
 	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Phone_Main.bin"
 	@echo 'Finished building: $@'
@@ -83,7 +91,7 @@ clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
